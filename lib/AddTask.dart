@@ -34,7 +34,9 @@ class _AddTaskState extends State<AddTask> {
                     IconButton(
                         icon: Icon(Icons.close),
                         iconSize: 40.0,
-                        onPressed: null),
+                        onPressed: (){
+                          Navigator.pop(context);
+                        }),
                     IconButton(
                         icon: Icon(Icons.done), iconSize: 40.0, onPressed: null)
                   ],

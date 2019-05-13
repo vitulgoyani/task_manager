@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/AddList.dart';
 import 'package:task_manager/AddTask.dart';
 import 'package:task_manager/DashBoard.dart';
 import 'package:task_manager/classlist/AppBarclass.dart';
@@ -73,7 +74,7 @@ class _ListPageState extends State<ListPage> {
               width: 15.0,
               height: 130.0,
               decoration: BoxDecoration(
-                  color: Color(hexStringToHexInt(colorss)),
+                  color: Color(int.parse(colorss)),
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(10.0),
                       bottomLeft: Radius.circular(10.0))),
@@ -168,7 +169,7 @@ class _ListPageState extends State<ListPage> {
             IconButton(icon: Icon(Icons.add), onPressed: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) {
-                    return AddTask();
+                    return AddList();
                   }));
             }),
           ],

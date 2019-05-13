@@ -51,7 +51,7 @@ class DBProvider {
       await db.rawInsert(
           "INSERT Into List_Master (id,name,color)"
           " VALUES (?,?,?)",
-          [id, "Office", "#C70039"]);
+          [id, "Office", "0xffd50000"]);
       var table2 =
       await db.rawQuery("SELECT MAX(id)+1 as id FROM List_Master");
       int id2 = table2.first["id"];
@@ -59,7 +59,7 @@ class DBProvider {
       await db.rawInsert(
           "INSERT Into List_Master (id,name,color)"
               " VALUES (?,?,?)",
-          [id2, "Home", "#FF5733"]);
+          [id2, "Home", "0xffffea00"]);
     });
   }
 
@@ -75,20 +75,22 @@ class DBProvider {
 
 
 
- /* //Insert IncomeCategory
-  newIncomeCategory(IncomeCategory newIncomeCategory) async {
+  //Insert IncomeCategory
+  newList(ListMaster newList) async {
     final db = await database;
     //get the biggest id in the table
     var table =
-        await db.rawQuery("SELECT MAX(id)+1 as id FROM Income_Category");
+        await db.rawQuery("SELECT MAX(id)+1 as id FROM List_Master");
     int id = table.first["id"];
     //insert to the table using the new id
     var raw = await db.rawInsert(
-        "INSERT Into Income_Category (id,name,amount)"
+        "INSERT Into List_Master (id,name,color)"
         " VALUES (?,?,?)",
-        [id, newIncomeCategory.name, newIncomeCategory.amount]);
+        [id, newList.name, newList.color]);
     return raw;
   }
+
+/*
 
   //Insert ExpenseCategory
   newExpenseCategory(ExpenseCategory newExpenseCategory) async {

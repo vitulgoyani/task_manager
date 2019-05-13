@@ -21,6 +21,7 @@ dependencies:
   path_provider:
   sqflite:
   date_format:
+  flutter_colorpicker:
   flutter:
     sdk: flutter
 
