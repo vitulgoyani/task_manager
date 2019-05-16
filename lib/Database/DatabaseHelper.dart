@@ -27,7 +27,8 @@ class DBProvider {
       await db.execute("""CREATE TABLE List_Master(
                 id INTEGER PRIMARY KEY,
                 name TEXT,
-                color TEXT
+                color TEXT,
+                sound TEXT
                 )""");
       await db.execute("""CREATE TABLE Task_Master(
               id INTEGER PRIMARY KEY,
@@ -49,17 +50,17 @@ class DBProvider {
       int id = table.first["id"];
       //insert to the table using the new id
       await db.rawInsert(
-          "INSERT Into List_Master (id,name,color)"
-          " VALUES (?,?,?)",
-          [id, "Office", "0xffd50000"]);
+          "INSERT Into List_Master (id,name,color,sound)"
+          " VALUES (?,?,?,?)",
+          [id, "Office", "0xffd50000","slow_spring_board"]);
       var table2 =
       await db.rawQuery("SELECT MAX(id)+1 as id FROM List_Master");
       int id2 = table2.first["id"];
       //insert to the table using the new id
       await db.rawInsert(
-          "INSERT Into List_Master (id,name,color)"
-              " VALUES (?,?,?)",
-          [id2, "Home", "0xffffea00"]);
+          "INSERT Into List_Master (id,name,color,sound)"
+              " VALUES (?,?,?,?)",
+          [id2, "Home", "0xffffea00","slow_spring_board"]);
     });
   }
 
@@ -75,7 +76,7 @@ class DBProvider {
 
 
 
-  //Insert IncomeCategory
+  //Insert List
   newList(ListMaster newList) async {
     final db = await database;
     //get the biggest id in the table
@@ -84,9 +85,9 @@ class DBProvider {
     int id = table.first["id"];
     //insert to the table using the new id
     var raw = await db.rawInsert(
-        "INSERT Into List_Master (id,name,color)"
-        " VALUES (?,?,?)",
-        [id, newList.name, newList.color]);
+        "INSERT Into List_Master (id,name,color,sound)"
+        " VALUES (?,?,?,?)",
+        [id, newList.name, newList.color,newList.sound]);
     return raw;
   }
 

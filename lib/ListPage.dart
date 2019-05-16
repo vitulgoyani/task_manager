@@ -160,10 +160,7 @@ class _ListPageState extends State<ListPage> {
             IconButton(
                 icon: Icon(Icons.dashboard),
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) {
-                        return DashBoard();
-                      }));
+                  Navigator.pop(context);
                 }),
             Text("+  New List",style: TextStyle(fontSize: 20.0,color: Colors.black45),),
             IconButton(icon: Icon(Icons.add), onPressed: () {
