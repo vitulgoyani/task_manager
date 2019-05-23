@@ -104,6 +104,7 @@ class _AddListState extends State<AddList> {
                             height: 30.0,
                           ),
                           TextFormField(
+                           autofocus: true,
                             controller: _nameController,
                             style: TextStyle(fontSize: 20.0),
                             decoration: InputDecoration(

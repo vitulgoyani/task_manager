@@ -11,7 +11,17 @@ class AddTask extends StatefulWidget {
 }
 
 class _AddTaskState extends State<AddTask> {
+  Color allcolor;
   int currentlistIndex = 0;
+  bool repeatbox = false;
+  bool chsu = false;
+  bool chmo = false;
+  bool chtu = false;
+  bool chwe = false;
+  bool chth = false;
+  bool chfr = false;
+  bool chsa = false;
+  bool tasknoti = true;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   DateTime _date = DateTime.now();
@@ -45,11 +55,13 @@ class _AddTaskState extends State<AddTask> {
                               keyboardType: TextInputType.text,
                               maxLines: 2,
                               decoration: InputDecoration(
-                                  border: InputBorder.none, hintText: "Task"),
+                                  border: InputBorder.none,
+                                  hintText: "Type Task"),
                               style: TextStyle(
                                   fontSize: 36.0,
                                   textBaseline: TextBaseline.ideographic),
                               controller: _nameController,
+                              autofocus: true,
                             ),
                           ),
                           Padding(
@@ -105,6 +117,9 @@ class _AddTaskState extends State<AddTask> {
                                                   onTap: () {
                                                     setState(() {
                                                       currentlistIndex = i;
+                                                      allcolor = Color(
+                                                          int.parse(
+                                                              list.color));
                                                       print(list.name);
                                                     });
                                                   },
@@ -128,7 +143,7 @@ class _AddTaskState extends State<AddTask> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(top: 210),
+                            padding: const EdgeInsets.only(top: 180),
                             child: Container(
                               width: mediawidth,
                               height: 200.0,
@@ -147,7 +162,7 @@ class _AddTaskState extends State<AddTask> {
                                                 height: 30.0,
                                               ),
                                               Text(
-                                                "Date",
+                                                "Due Date",
                                                 style: TextStyle(
                                                     fontSize: 22.0,
                                                     color: Colors.black54),
@@ -156,13 +171,23 @@ class _AddTaskState extends State<AddTask> {
                                                 height: 20.0,
                                               ),
                                               InkWell(
-                                                onTap: () =>
-                                                    _selectDate(context),
+                                                onTap: () {
+                                                  if (repeatbox == false)
+                                                    _selectDate(context);
+                                                },
                                                 child: AutoSizeText(
                                                   formatDate(_date,
                                                       [dd, ' ', M, ' ', yyyy]),
-                                                  style:
-                                                      TextStyle(fontSize: 38.0),
+                                                  style: repeatbox == true
+                                                      ? TextStyle(
+                                                          fontSize: 38.0,
+                                                          decoration:
+                                                              TextDecoration
+                                                                  .lineThrough,
+                                                          color: Colors.black45)
+                                                      : TextStyle(
+                                                          fontSize: 38.0,
+                                                        ),
                                                   maxLines: 2,
                                                 ),
                                               ),
@@ -183,7 +208,7 @@ class _AddTaskState extends State<AddTask> {
                                                 height: 30.0,
                                               ),
                                               Text(
-                                                "Time",
+                                                "Due Time",
                                                 style: TextStyle(
                                                     fontSize: 22.0,
                                                     color: Colors.black54),
@@ -204,13 +229,42 @@ class _AddTaskState extends State<AddTask> {
                                               SizedBox(
                                                 height: 10.0,
                                               ),
-                                              AutoSizeText(
-                                                "Notification: off",
-                                                style: TextStyle(
-                                                  fontSize: 22.0,
+                                              GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    tasknoti == true
+                                                        ? tasknoti = false
+                                                        : tasknoti = true;
+                                                  });
+                                                },
+                                                child: Row(
+                                                  children: <Widget>[
+                                                    AutoSizeText(
+                                                      "Notification: ",
+                                                      style: TextStyle(
+                                                        fontSize: 22.0,
+                                                      ),
+                                                      maxLines: 1,
+                                                    ),
+                                                    tasknoti == true
+                                                        ? AutoSizeText(
+                                                            "On",
+                                                            style: TextStyle(
+                                                              fontSize: 22.0,
+                                                            ),
+                                                            maxLines: 1,
+                                                          )
+                                                        : AutoSizeText(
+                                                            "Off",
+                                                            style: TextStyle(
+                                                              fontSize: 21.0,
+                                                            ),
+                                                            maxLines: 1,
+                                                          )
+                                                  ],
                                                 ),
-                                                maxLines: 1,
                                               ),
+
                                             ],
                                           ),
                                         ),
@@ -219,6 +273,169 @@ class _AddTaskState extends State<AddTask> {
                               ),
                             ),
                           ),
+                          repeatbox == true
+                              ? Padding(
+                                  padding: const EdgeInsets.only(top: 380),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: <Widget>[
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: <Widget>[
+                                          Checkbox(
+                                              activeColor: allcolor,
+                                              value: chsu,
+                                              onChanged: (bool val) {
+                                                setState(() {
+                                                  chsu = val;
+                                                  print(chsu);
+                                                });
+                                              }),
+                                          Text("Su"),
+                                        ],
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: <Widget>[
+                                          Checkbox(
+                                              activeColor: allcolor,
+                                              value: chmo,
+                                              onChanged: (bool val) {
+                                                setState(() {
+                                                  chmo = val;
+                                                  print(chmo);
+                                                });
+                                              }),
+                                          Text("Mo"),
+                                        ],
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: <Widget>[
+                                          Checkbox(
+                                              activeColor: allcolor,
+                                              value: chtu,
+                                              onChanged: (bool val) {
+                                                setState(() {
+                                                  chtu = val;
+                                                  print(chtu);
+                                                });
+                                              }),
+                                          Text("Tu"),
+                                        ],
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: <Widget>[
+                                          Checkbox(
+                                              activeColor: allcolor,
+                                              value: chwe,
+                                              onChanged: (bool val) {
+                                                setState(() {
+                                                  chwe = val;
+                                                  print(chwe);
+                                                });
+                                              }),
+                                          Text("We"),
+                                        ],
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: <Widget>[
+                                          Checkbox(
+                                              activeColor: allcolor,
+                                              value: chth,
+                                              onChanged: (bool val) {
+                                                setState(() {
+                                                  chth = val;
+                                                  print(chth);
+                                                });
+                                              }),
+                                          Text("Th"),
+                                        ],
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: <Widget>[
+                                          Checkbox(
+                                              activeColor: allcolor,
+                                              value: chfr,
+                                              onChanged: (bool val) {
+                                                setState(() {
+                                                  chfr = val;
+                                                  print(chfr);
+                                                });
+                                              }),
+                                          Text("Fr"),
+                                        ],
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: <Widget>[
+                                          Checkbox(
+                                              activeColor: allcolor,
+                                              value: chsa,
+                                              onChanged: (bool val) {
+                                                setState(() {
+                                                  chsa = val;
+                                                  print(chsa);
+                                                });
+                                              }),
+                                          Text("Sa"),
+                                        ],
+                                      ),/*
+                                      daycolumn("Sun", chsu),
+                                      daycolumn("Mon", chmo),
+                                      daycolumn("Tues", chtu),
+                                      daycolumn("Wednes", chwe),
+                                      daycolumn("Thurs", chsu),
+                                      daycolumn("Fri", chsu),
+                                      daycolumn("Satur", chsu),*/
+                                    ],
+                                  ))
+                              : SizedBox(),
+                          Padding(
+                              padding: const EdgeInsets.only(top: 350),
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text("Repeat Task",style: TextStyle(fontSize: 16.0),),
+                                    Switch(
+                                        activeColor: allcolor,
+                                        value: repeatbox,
+                                        onChanged: (bool val) {
+                                          setState(() {
+                                            repeatbox = val;
+                                          });
+                                        }),
+                                  ],
+                                ),
+                              )),
                           /*Positioned(
                             bottom: 0.0,
                             child: Column(
@@ -316,6 +533,24 @@ class _AddTaskState extends State<AddTask> {
     );
   }
 
+  Widget daycolumn(String day, bool short) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Checkbox(
+            value: short,
+            onChanged: (bool val) {
+              setState(() {
+                short = val;
+                print(short);
+              });
+            }),
+        Text(day),
+      ],
+    );
+  }
+
   datedata() {
     return showDialog(
       context: context,
@@ -323,20 +558,13 @@ class _AddTaskState extends State<AddTask> {
         return AlertDialog(
           titlePadding: const EdgeInsets.all(0.0),
           contentPadding: const EdgeInsets.all(0.0),
-          content: SingleChildScrollView(
-              child: Container(
-            width: MediaQuery.of(context).size.width,
+          content: Container(
             height: MediaQuery.of(context).size.height,
-            child: ListTile(
-                leading: IconButton(
-                  icon: Icon(Icons.play_arrow),
-                ),
-                title: Text("Select Date"),
-                onTap: () {
-                  setState(() {});
-                  Navigator.pop(context);
-                }),
-          )),
+            width: MediaQuery.of(context).size.width,
+            child: ListView(
+              children: <Widget>[],
+            ),
+          ),
         );
       },
     );
