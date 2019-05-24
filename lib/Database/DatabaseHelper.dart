@@ -4,6 +4,7 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:task_manager/Model/ListsModel.dart';
+import 'package:task_manager/Model/TasksModel.dart';
 
 class DBProvider {
   DBProvider._();
@@ -32,6 +33,7 @@ class DBProvider {
                 )""");
       await db.execute("""CREATE TABLE Task_Master(
               id INTEGER PRIMARY KEY,
+              taskstatus TEXT,
               datetime TEXT,
               name TEXT,
               note TEXT,
@@ -45,22 +47,20 @@ class DBProvider {
               FOREIGN KEY (list_master_id) REFERENCES List_Master(id) ON DELETE NO ACTION ON UPDATE NO ACTION
               )""");
 
-      var table =
-          await db.rawQuery("SELECT MAX(id)+1 as id FROM List_Master");
+      var table = await db.rawQuery("SELECT MAX(id)+1 as id FROM List_Master");
       int id = table.first["id"];
       //insert to the table using the new id
       await db.rawInsert(
           "INSERT Into List_Master (id,name,color,sound)"
           " VALUES (?,?,?,?)",
-          [id, "Office", "0xffd50000","slow_spring_board"]);
-      var table2 =
-      await db.rawQuery("SELECT MAX(id)+1 as id FROM List_Master");
+          [id, "Office", "0xffd50000", "slow_spring_board"]);
+      var table2 = await db.rawQuery("SELECT MAX(id)+1 as id FROM List_Master");
       int id2 = table2.first["id"];
       //insert to the table using the new id
       await db.rawInsert(
           "INSERT Into List_Master (id,name,color,sound)"
-              " VALUES (?,?,?,?)",
-          [id2, "Home", "0xffffea00","slow_spring_board"]);
+          " VALUES (?,?,?,?)",
+          [id2, "Home", "0xffffea00", "slow_spring_board"]);
     });
   }
 
@@ -68,26 +68,66 @@ class DBProvider {
   Future<List<ListMaster>> getAllLists() async {
     final db = await database;
     var res = await db.query("List_Master");
-    List<ListMaster> list = res.isNotEmpty
-        ? res.map((c) => ListMaster.fromMap(c)).toList()
-        : [];
+    List<ListMaster> list =
+        res.isNotEmpty ? res.map((c) => ListMaster.fromMap(c)).toList() : [];
+    return list;
+  }
+  //get all task by today
+  Future<List<TaskMaster>> getAllTasks() async {
+    final db = await database;
+    var res = await db.rawQuery("SELECT * FROM Task_Master WHERE datetime=date('now')");
+    List<TaskMaster> list =
+    res.isNotEmpty ? res.map((c) => TaskMaster.fromMap(c)).toList() : [];
     return list;
   }
 
-
+  //List Data by id
+  Future<List<ListMaster>> getlistdatabyid(int id) async {
+    final db = await database;
+    var res = await db.rawQuery("SELECT * FROM List_Master WHERE id=$id");
+    List<ListMaster> list =
+    res.isNotEmpty ? res.map((c) => ListMaster.fromMap(c)).toList() : [];
+    return list;
+  }
 
   //Insert List
   newList(ListMaster newList) async {
     final db = await database;
     //get the biggest id in the table
-    var table =
-        await db.rawQuery("SELECT MAX(id)+1 as id FROM List_Master");
+    var table = await db.rawQuery("SELECT MAX(id)+1 as id FROM List_Master");
     int id = table.first["id"];
     //insert to the table using the new id
     var raw = await db.rawInsert(
         "INSERT Into List_Master (id,name,color,sound)"
         " VALUES (?,?,?,?)",
-        [id, newList.name, newList.color,newList.sound]);
+        [id, newList.name, newList.color, newList.sound]);
+    return raw;
+  }
+
+  //Insert Task
+  newTask(TaskMaster newTask) async {
+    final db = await database;
+    //get the biggest id in the table
+    var table = await db.rawQuery("SELECT MAX(id)+1 as id FROM Task_Master");
+    int id = table.first["id"];
+    //insert to the table using the new id
+    var raw = await db.rawInsert(
+        "INSERT Into Task_Master (id,taskstatus,datetime,name,note,repeat_category,noti_status,noti_sound,noti_time,auto_complete,image,list_master_id)"
+        " VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+        [
+          id,
+          newTask.taskstatus,
+          newTask.datetime,
+          newTask.name,
+          newTask.note,
+          newTask.repeatCategory,
+          newTask.notiStatus,
+          newTask.notiSound,
+          newTask.notiTime,
+          newTask.autoComplete,
+          newTask.image,
+          newTask.listMasterId
+        ]);
     return raw;
   }
 
@@ -146,7 +186,7 @@ class DBProvider {
     return raw;
   }*/
 
-  /*//get all ExpenseCategory
+/*//get all ExpenseCategory
   Future<List<ExpenseCategory>> getAllExpenseCategory() async {
     final db = await database;
     var res = await db.query("Expense_Category");
@@ -312,7 +352,7 @@ class DBProvider {
     }
   }
 
-  *//* //Total Expense Amount
+  */ /* //Total Expense Amount
   Future<List<TotalExpense>> gettotalexpense(String datatext) async {
     final db = await database;
     var res = await db.rawQuery(
@@ -320,7 +360,7 @@ class DBProvider {
     List<TotalExpense> list =
     res.isNotEmpty ? res.map((c) => TotalExpense.fromMap(c)).toList() : [];
     return list;
-  }*//*
+  }*/ /*
 
   //Total Income Category Amount
   Future<List<TotalIncome>> gettotalincomecategory(int id) async {
@@ -401,8 +441,6 @@ class DBProvider {
         where: "id = ?", whereArgs: [newCurrency.id]);
     return res;
   }*/
-
-
 
 /*blockOrUnblock(Client client) async {
     final db = await database;

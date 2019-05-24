@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/AddList.dart';
-import 'package:task_manager/AddTask.dart';
-import 'package:task_manager/DashBoard.dart';
 import 'package:task_manager/classlist/AppBarclass.dart';
 import 'package:task_manager/Database/DatabaseHelper.dart';
 import 'package:task_manager/Model/ListsModel.dart';

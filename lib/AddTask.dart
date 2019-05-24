@@ -4,6 +4,7 @@ import 'package:task_manager/Model/ListsModel.dart';
 import 'package:task_manager/Database/DatabaseHelper.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:date_format/date_format.dart';
+import 'package:task_manager/Model/TasksModel.dart';
 
 class AddTask extends StatefulWidget {
   @override
@@ -14,6 +15,7 @@ class _AddTaskState extends State<AddTask> {
   Color allcolor;
   int currentlistIndex = 0;
   bool repeatbox = false;
+  int listid = 1;
   bool chsu = false;
   bool chmo = false;
   bool chtu = false;
@@ -26,6 +28,25 @@ class _AddTaskState extends State<AddTask> {
   final TextEditingController _nameController = TextEditingController();
   DateTime _date = DateTime.now();
   TimeOfDay _time = TimeOfDay.now();
+  List repeatday = [];
+
+  void _addTask() async {
+    await DBProvider.db.newTask(TaskMaster(
+        taskstatus:"undone",
+        name: _nameController.text,
+        datetime: _date.toString().substring(0,10),
+        listMasterId: listid,
+        notiStatus: tasknoti == true ? "on" : "off",
+        repeatCategory: repeatbox == true ? repeatday.toString() : "off",
+        image: "",
+        autoComplete: "off",
+        note: "",
+        notiSound: "",
+        notiTime: _time.toString()));
+    setState(() {
+      Navigator.pop(context);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +83,11 @@ class _AddTaskState extends State<AddTask> {
                                   textBaseline: TextBaseline.ideographic),
                               controller: _nameController,
                               autofocus: true,
+                              validator: (String value) {
+                                if (value.isEmpty) {
+                                  return 'Please Type Task';
+                                }
+                              },
                             ),
                           ),
                           Padding(
@@ -120,7 +146,8 @@ class _AddTaskState extends State<AddTask> {
                                                       allcolor = Color(
                                                           int.parse(
                                                               list.color));
-                                                      print(list.name);
+                                                      listid = list.id;
+                                                      print(listid);
                                                     });
                                                   },
                                                   child: listract(
@@ -264,7 +291,6 @@ class _AddTaskState extends State<AddTask> {
                                                   ],
                                                 ),
                                               ),
-
                                             ],
                                           ),
                                         ),
@@ -292,7 +318,9 @@ class _AddTaskState extends State<AddTask> {
                                               onChanged: (bool val) {
                                                 setState(() {
                                                   chsu = val;
-                                                  print(chsu);
+                                                  chsu == true
+                                                      ? repeatday.add("su")
+                                                      : repeatday.remove("su");
                                                 });
                                               }),
                                           Text("Su"),
@@ -310,7 +338,9 @@ class _AddTaskState extends State<AddTask> {
                                               onChanged: (bool val) {
                                                 setState(() {
                                                   chmo = val;
-                                                  print(chmo);
+                                                  chmo == true
+                                                      ? repeatday.add("mo")
+                                                      : repeatday.remove("mo");
                                                 });
                                               }),
                                           Text("Mo"),
@@ -328,7 +358,9 @@ class _AddTaskState extends State<AddTask> {
                                               onChanged: (bool val) {
                                                 setState(() {
                                                   chtu = val;
-                                                  print(chtu);
+                                                  chtu == true
+                                                      ? repeatday.add("tu")
+                                                      : repeatday.remove("tu");
                                                 });
                                               }),
                                           Text("Tu"),
@@ -346,7 +378,9 @@ class _AddTaskState extends State<AddTask> {
                                               onChanged: (bool val) {
                                                 setState(() {
                                                   chwe = val;
-                                                  print(chwe);
+                                                  chwe == true
+                                                      ? repeatday.add("we")
+                                                      : repeatday.remove("we");
                                                 });
                                               }),
                                           Text("We"),
@@ -364,7 +398,9 @@ class _AddTaskState extends State<AddTask> {
                                               onChanged: (bool val) {
                                                 setState(() {
                                                   chth = val;
-                                                  print(chth);
+                                                  chth == true
+                                                      ? repeatday.add("th")
+                                                      : repeatday.remove("th");
                                                 });
                                               }),
                                           Text("Th"),
@@ -382,7 +418,9 @@ class _AddTaskState extends State<AddTask> {
                                               onChanged: (bool val) {
                                                 setState(() {
                                                   chfr = val;
-                                                  print(chfr);
+                                                  chfr == true
+                                                      ? repeatday.add("fr")
+                                                      : repeatday.remove("fr");
                                                 });
                                               }),
                                           Text("Fr"),
@@ -400,12 +438,14 @@ class _AddTaskState extends State<AddTask> {
                                               onChanged: (bool val) {
                                                 setState(() {
                                                   chsa = val;
-                                                  print(chsa);
+                                                  chsa == true
+                                                      ? repeatday.add("sa")
+                                                      : repeatday.remove("sa");
                                                 });
                                               }),
                                           Text("Sa"),
                                         ],
-                                      ),/*
+                                      ), /*
                                       daycolumn("Sun", chsu),
                                       daycolumn("Mon", chmo),
                                       daycolumn("Tues", chtu),
@@ -424,7 +464,10 @@ class _AddTaskState extends State<AddTask> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
-                                    Text("Repeat Task",style: TextStyle(fontSize: 16.0),),
+                                    Text(
+                                      "Repeat Task",
+                                      style: TextStyle(fontSize: 16.0),
+                                    ),
                                     Switch(
                                         activeColor: allcolor,
                                         value: repeatbox,
@@ -482,7 +525,11 @@ class _AddTaskState extends State<AddTask> {
                       IconButton(
                           icon: Icon(Icons.done),
                           iconSize: 40.0,
-                          onPressed: null)
+                          onPressed: () async {
+                            if (_formKey.currentState.validate()) {
+                              _addTask();
+                            }
+                          },)
                     ],
                   ),
                 ),

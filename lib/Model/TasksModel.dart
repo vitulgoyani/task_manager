@@ -10,6 +10,7 @@ String taskMasterToJson(TaskMaster data) => json.encode(data.toMap());
 
 class TaskMaster {
   int id;
+  String taskstatus;
   String datetime;
   String name;
   String note;
@@ -23,6 +24,7 @@ class TaskMaster {
 
   TaskMaster({
     this.id,
+    this.taskstatus,
     this.datetime,
     this.name,
     this.note,
@@ -37,6 +39,7 @@ class TaskMaster {
 
   factory TaskMaster.fromMap(Map<String, dynamic> json) => new TaskMaster(
     id: json["id"],
+    taskstatus: json["taskstatus"],
     datetime: json["datetime"],
     name: json["name"],
     note: json["note"],
@@ -51,6 +54,7 @@ class TaskMaster {
 
   Map<String, dynamic> toMap() => {
     "id": id,
+    "taskstatus": taskstatus,
     "datetime": datetime,
     "name": name,
     "note": note,

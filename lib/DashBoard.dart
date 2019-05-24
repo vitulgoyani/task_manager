@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/AddTask.dart';
 import 'package:task_manager/ListPage.dart';
-import 'package:task_manager/classlist/AppBarclass.dart';
+import 'package:task_manager/Model/TasksModel.dart';
+import 'package:task_manager/Model/ListsModel.dart';
+import 'package:task_manager/Database/DatabaseHelper.dart';
 
 class DashBoard extends StatefulWidget {
   @override
@@ -19,19 +21,122 @@ class _DashBoardState extends State<DashBoard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: LayoutBuilder(builder: (context, constraints) {
-        return Stack(
-          fit: StackFit.expand,
-          children: <Widget>[
-            appbardash(),
-            bottomnvigation(),
-          ],
-        );
-      }),
+      bottomNavigationBar: bottomnvigation(),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          appbar(),
+          Divider(),
+          FutureBuilder<List<TaskMaster>>(
+              future: DBProvider.db.getAllTasks(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<TaskMaster>> snapshot) {
+                if (snapshot.hasData && snapshot.data.length > 0) {
+                  return Flexible(
+                    child: ListView.builder(
+                      physics: BouncingScrollPhysics(),
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (BuildContext context, int i) {
+                        TaskMaster taskdata = snapshot.data[i];
+                        return Column(
+                          children: <Widget>[
+                            FutureBuilder<List<ListMaster>>(
+                                future: DBProvider.db.getlistdatabyid(
+                                    taskdata.listMasterId),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<List<ListMaster>>
+                                        snapshot) {
+                                  if (snapshot.hasData &&
+                                      snapshot.data.length > 0) {
+                                    ListMaster listdata =
+                                        snapshot.data[0];
+                                    return Text(listdata.name);
+                                  } else {
+                                    return SizedBox();
+                                  }
+                                }),
+                            Text(taskdata.name),
+                            Text(taskdata.datetime),
+                          ],
+                        );
+                      },
+                    ),
+                  );
+                } else {
+                  return Expanded(
+                    child: Center(
+                      child: Text("No any Task"),
+                    ),
+                  );
+                }
+              }),
+          Container(
+            height: 50.0,
+            width: MediaQuery.of(context).size.width,
+            child: Row(
+              children: <Widget>[
+                Container(
+                  width: 20.0,
+                  height: 50.0,
+                  color: Colors.white,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width - 20.0,
+                  height: 50.0,
+                  color: Colors.green,
+                )
+              ],
+            ),
+          ),
+          FutureBuilder<List<TaskMaster>>(
+              future: DBProvider.db.getAllTasks(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<TaskMaster>> snapshot) {
+                if (snapshot.hasData && snapshot.data.length > 0) {
+                  return Flexible(
+                    child: ListView.builder(
+                      physics: BouncingScrollPhysics(),
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (BuildContext context, int i) {
+                        TaskMaster taskdata = snapshot.data[i];
+                        return Column(
+                          children: <Widget>[
+                            FutureBuilder<List<ListMaster>>(
+                                future: DBProvider.db.getlistdatabyid(
+                                    taskdata.listMasterId),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<List<ListMaster>>
+                                    snapshot) {
+                                  if (snapshot.hasData &&
+                                      snapshot.data.length > 0) {
+                                    ListMaster listdata =
+                                    snapshot.data[0];
+                                    return Text(listdata.name);
+                                  } else {
+                                    return SizedBox();
+                                  }
+                                }),
+                            Text(taskdata.name),
+                            Text(taskdata.datetime),
+                          ],
+                        );
+                      },
+                    ),
+                  );
+                } else {
+                  return Expanded(
+                    child: Center(
+                      child: Text("No any Task"),
+                    ),
+                  );
+                }
+              }),
+        ],
+      ),
     );
   }
 
-  /* Widget appbar() {
+  Widget appbar() {
     return Padding(
       padding: EdgeInsets.only(top: 50.0, left: 20.0),
       child: Container(
@@ -53,11 +158,10 @@ class _DashBoardState extends State<DashBoard> {
         ),
       ),
     );
-  }*/
+  }
 
   Widget bottomnvigation() {
-    return Positioned(
-      bottom: 0.0,
+    return BottomAppBar(
       child: Container(
         height: 70.0,
         width: MediaQuery.of(context).size.width,
@@ -75,12 +179,14 @@ class _DashBoardState extends State<DashBoard> {
                       return ListPage();
                     }));
                   }),
-              IconButton(icon: Icon(Icons.add), onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) {
+              IconButton(
+                  icon: Icon(Icons.add),
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
                       return AddTask();
                     }));
-              }),
+                  }),
             ],
           ),
         ),
