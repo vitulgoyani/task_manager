@@ -41,22 +41,24 @@ class _DashBoardState extends State<DashBoard> {
                         return Column(
                           children: <Widget>[
                             FutureBuilder<List<ListMaster>>(
-                                future: DBProvider.db.getlistdatabyid(
-                                    taskdata.listMasterId),
+                                future: DBProvider.db
+                                    .getlistdatabyid(taskdata.listMasterId),
                                 builder: (BuildContext context,
-                                    AsyncSnapshot<List<ListMaster>>
-                                        snapshot) {
+                                    AsyncSnapshot<List<ListMaster>> snapshot) {
                                   if (snapshot.hasData &&
                                       snapshot.data.length > 0) {
-                                    ListMaster listdata =
-                                        snapshot.data[0];
-                                    return Text(listdata.name);
+                                    ListMaster listdata = snapshot.data[0];
+                                    return ListTile(
+                                      title: Text(taskdata.name),
+                                      trailing: Text((taskdata.notiTime).toString()),
+                                      leading: Checkbox(checkColor: Color(int.parse(listdata.color)),value: true, onChanged: null)
+                                    );
                                   } else {
                                     return SizedBox();
                                   }
                                 }),
-                            Text(taskdata.name),
-                            Text(taskdata.datetime),
+                            /*Text(taskdata.name),
+                            Text(taskdata.datetime),*/
                           ],
                         );
                       },
@@ -70,7 +72,7 @@ class _DashBoardState extends State<DashBoard> {
                   );
                 }
               }),
-          Container(
+          /* Container(
             height: 50.0,
             width: MediaQuery.of(context).size.width,
             child: Row(
@@ -130,7 +132,7 @@ class _DashBoardState extends State<DashBoard> {
                     ),
                   );
                 }
-              }),
+              }),*/
         ],
       ),
     );
@@ -179,6 +181,10 @@ class _DashBoardState extends State<DashBoard> {
                       return ListPage();
                     }));
                   }),
+              Text(
+                "+  New Task",
+                style: TextStyle(fontSize: 20.0, color: Colors.black45),
+              ),
               IconButton(
                   icon: Icon(Icons.add),
                   onPressed: () {

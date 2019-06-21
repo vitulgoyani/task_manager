@@ -42,7 +42,7 @@ class _AddTaskState extends State<AddTask> {
         autoComplete: "off",
         note: "",
         notiSound: "",
-        notiTime: _time.toString()));
+        notiTime: _time.format(context).toString()));
     setState(() {
       Navigator.pop(context);
     });
